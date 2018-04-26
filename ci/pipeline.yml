@@ -4,12 +4,13 @@ resources:
     type: semver
     source:
       initial_version: "1.0.0"
-      driver: s3
-      endpoint: ((s3-endpoint))
-      bucket: ((s3-release-bucket))
-      access_key_id: ((s3-access-key-id))
-      secret_access_key: ((s3-secret-access-key))
-      key: version/((application-name))
+      driver: git
+      uri: ((git-repo-url))
+      branch: version 
+      file: version
+      private_key: ((git-private-key))
+      git_user: concourse@example.com
+      commit_version: "[ci skip] Update version to %version%"
 
   - name: source 
     type: git
