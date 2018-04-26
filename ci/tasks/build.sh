@@ -24,7 +24,7 @@ pushd source
 	# Update revision tag in the pom.xml so that Maven build get proper version
 	set_revision_to_pom ${VERSION}
 	
-	./mvnw clean package ${MVN_PARAMS} 
+	mvn clean package ${MVN_PARAMS} 
 
 	# Expose application and manifests to the output directory
 	cp target/*.jar ../unpacked-artifacts/application.jar

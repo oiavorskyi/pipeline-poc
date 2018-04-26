@@ -26,14 +26,14 @@ resources:
   #     repository: ((github-repository))
   #     access_token: ((github-access-token))
 
-  - name: release-candidate 
-    type: s3
-    source:
-      endpoint: ((s3-endpoint))
-      bucket: ((s3-release-bucket))
-      access_key_id: ((s3-access-key-id))
-      secret_access_key: ((s3-secret-access-key))
-      regexp: rc/((application-name))-(.*).tgz
+  # - name: release-candidate 
+  #   type: s3
+  #   source:
+  #     endpoint: ((s3-endpoint))
+  #     bucket: ((s3-release-bucket))
+  #     access_key_id: ((s3-access-key-id))
+  #     secret_access_key: ((s3-secret-access-key))
+  #     regexp: rc/((application-name))-(.*).tgz
 
   # - name: release-final
   #   type: s3
@@ -44,15 +44,15 @@ resources:
   #     secret_access_key: ((s3-secret-access-key))
   #     regexp: final/((application-name))-(.*).tgz
 
-  - name: pcf-dev
-    type: cf
-    source:
-      api: ((cf-dev-api))
-      organization: ((cf-dev-org))
-      space: ((cf-dev-space))
-      username: ((cf-dev-username))
-      password: ((cf-dev-password))
-      skip_cert_check: false
+  # - name: pcf-dev
+  #   type: cf
+  #   source:
+  #     api: ((cf-dev-api))
+  #     organization: ((cf-dev-org))
+  #     space: ((cf-dev-space))
+  #     username: ((cf-dev-username))
+  #     password: ((cf-dev-password))
+  #     skip_cert_check: false
 
   # - name: pcf-prod
   #   type: cf
@@ -89,24 +89,24 @@ jobs:
       #   params:
       #     file: tarball/*.tgz
 
-  - name: deploy-dev
-    serial_groups: [version]
-    plan:
-    - aggregate:
-      - get: release
-        resource: release-candidate
-        passed: [create-rc]
-        trigger: true
-        params:
-          unpack: true
-      - get: source # To enable usage of this resource in shipit "passed" condition
-        passed: [create-rc]
-    - put: pcf-dev
-      params:
-        manifest: release/manifests/development.yml
-        path: release/application.jar
-        current_app_name: dev-((application-name))((application-deployment-suffix))
-        show_app_log: true
+  # - name: deploy-dev
+  #   serial_groups: [version]
+  #   plan:
+  #   - aggregate:
+  #     - get: release
+  #       resource: release-candidate
+  #       passed: [create-rc]
+  #       trigger: true
+  #       params:
+  #         unpack: true
+  #     - get: source # To enable usage of this resource in shipit "passed" condition
+  #       passed: [create-rc]
+  #   - put: pcf-dev
+  #     params:
+  #       manifest: release/manifests/development.yml
+  #       path: release/application.jar
+  #       current_app_name: dev-((application-name))((application-deployment-suffix))
+  #       show_app_log: true
 
 #  - name: shipit
 #    serial_groups: [version]
