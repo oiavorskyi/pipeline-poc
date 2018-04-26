@@ -10,7 +10,7 @@ resources:
       file: version
       private_key: ((git-private-key))
       git_user: concourse@example.com
-      commit_version: "[ci skip] Update version to %version%"
+      commit_message: "[ci skip] Update version to %version%"
 
   - name: source 
     type: git
