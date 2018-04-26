@@ -3,7 +3,7 @@ resources:
   - name: version
     type: semver
     source:
-      initial_version: "2.0.0"
+      initial_version: "1.0.0"
       driver: s3
       endpoint: ((s3-endpoint))
       bucket: ((s3-release-bucket))
@@ -18,12 +18,12 @@ resources:
       branch: ((git-release-branch))
       private_key: ((git-private-key))
 
-  - name: gh-release
-    type: github-release
-    source:
-      user: ((github-username))
-      repository: ((github-repository))
-      access_token: ((github-access-token))
+  # - name: gh-release
+  #   type: github-release
+  #   source:
+  #     user: ((github-username))
+  #     repository: ((github-repository))
+  #     access_token: ((github-access-token))
 
   - name: release-candidate 
     type: s3
@@ -34,14 +34,14 @@ resources:
       secret_access_key: ((s3-secret-access-key))
       regexp: rc/((application-name))-(.*).tgz
 
-  - name: release-final
-    type: s3
-    source:
-      endpoint: ((s3-endpoint))
-      bucket: ((s3-release-bucket))
-      access_key_id: ((s3-access-key-id))
-      secret_access_key: ((s3-secret-access-key))
-      regexp: final/((application-name))-(.*).tgz
+  # - name: release-final
+  #   type: s3
+  #   source:
+  #     endpoint: ((s3-endpoint))
+  #     bucket: ((s3-release-bucket))
+  #     access_key_id: ((s3-access-key-id))
+  #     secret_access_key: ((s3-secret-access-key))
+  #     regexp: final/((application-name))-(.*).tgz
 
   - name: pcf-dev
     type: cf
@@ -53,15 +53,15 @@ resources:
       password: ((cf-dev-password))
       skip_cert_check: false
 
-  - name: pcf-prod
-    type: cf
-    source:
-      api: ((cf-prod-api))
-      organization: ((cf-prod-org))
-      space: ((cf-prod-space))
-      username: ((cf-prod-username))
-      password: ((cf-prod-password))
-      skip_cert_check: false
+  # - name: pcf-prod
+  #   type: cf
+  #   source:
+  #     api: ((cf-prod-api))
+  #     organization: ((cf-prod-org))
+  #     space: ((cf-prod-space))
+  #     username: ((cf-prod-username))
+  #     password: ((cf-prod-password))
+  #     skip_cert_check: false
 
 jobs:
   - name: create-rc
