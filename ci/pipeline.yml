@@ -76,8 +76,6 @@ jobs:
 
     - task: build
       file: source/ci/tasks/build.yml
-      params:
-        MVN_PARAMS: "-Pprod"
     
     - task: package-release
       file: source/ci/tasks/package-release.yml
@@ -87,9 +85,9 @@ jobs:
     - aggregate:
       - put: version
         params: {pre: rev}
-      - put: release-candidate 
-        params:
-          file: tarball/*.tgz
+      # - put: release-candidate 
+      #   params:
+      #     file: tarball/*.tgz
 
   - name: deploy-dev
     serial_groups: [version]
