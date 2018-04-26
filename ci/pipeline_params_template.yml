@@ -1,0 +1,27 @@
+---
+application-name: snap-analysis
+application-deployment-suffix: ""
+git-repo-url: git@github.com:pivotalservices/snap.git
+git-release-branch: master
+github-username: pivotalservices
+github-repository: snap
+github-access-token: 
+s3-endpoint: s3.amazonaws.com
+s3-release-bucket: artifacts.snap.pivotal.io
+s3-access-key-id: 
+s3-secret-access-key: 
+cf-dev-api: api.run.pivotal.io
+cf-dev-org: EVP
+cf-dev-space: pse-development
+cf-dev-username: 
+cf-dev-password: 
+cf-prod-api: api.run.pivotal.io
+cf-prod-org: EVP
+cf-prod-space: pse-production
+cf-prod-username: 
+cf-prod-password:
+git-private-key: |
+
+# Additional app-specific environment variables
+oauth2-client-id:
+oauth2-client-secret:
