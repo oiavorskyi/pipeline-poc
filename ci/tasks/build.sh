@@ -28,7 +28,7 @@ pushd source
 
 	# Expose application and manifests to the output directory
 	cp target/*.jar ../unpacked-artifacts/application.jar
-	#mkdir -p ../unpacked-artifacts/manifests
-	#cp development-manifest-oauth.yml ../unpacked-artifacts/manifests/development.yml
+	mkdir -p ../unpacked-artifacts/manifests
+	cp manifest.yml ../unpacked-artifacts/manifests/development.yml
 	#cp manifest-oauth.yml ../unpacked-artifacts/manifests/prod.yml
 popd
