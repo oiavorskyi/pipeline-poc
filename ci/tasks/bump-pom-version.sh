@@ -18,6 +18,8 @@ fi
 
 git clone source updated-source
 
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+
 cd updated-source
     git config user.email "wings@pivotal.io"
     git config user.name "Concourse CI"
