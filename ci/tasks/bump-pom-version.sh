@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -eux
 
@@ -11,7 +11,7 @@ FULL_FINAL_VERSION="${FINAL_VERSION}${FINAL_VERSION_SUFFIX}"
 NEXT_VERSION=$(cat next-version/version)
 FULL_NEXT_VERSION="${NEXT_VERSION}${NEXT_VERSION_SUFFIX}"
 
-if [[ -z ${RELEASE_BRANCH} ]]; then
+if [ -z ${RELEASE_BRANCH} ]; then
     echo "The RELEASE_BRANCH parameter is required"
     exit 2
 fi

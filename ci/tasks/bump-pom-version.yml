@@ -23,6 +23,6 @@ params:
   NEXT_VERSION_SUFFIX: ""
 
 run:
-  path: /bin/bash
+  path: /bin/sh
   args:
     - source/ci/tasks/bump-pom-version.sh
