@@ -18,9 +18,6 @@ fi
 
 git clone source updated-source
 
-mkdir -p ~/.ssh
-ssh-keyscan github.com >> ~/.ssh/known_hosts
-
 cd updated-source
     git config user.email "wings@pivotal.io"
     git config user.name "Concourse CI"
@@ -37,8 +34,4 @@ cd updated-source
     git checkout ${RELEASE_BRANCH}
     git merge version-bump
     git branch -d version-bump
-
-    git remote set-url origin ${GIT_ORIGIN}
-
-    git push origin ${RELEASE_BRANCH}
 cd -

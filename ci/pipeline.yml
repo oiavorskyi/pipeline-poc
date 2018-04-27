@@ -19,7 +19,16 @@ resources:
       git_user: concourse@example.com
       commit_message: "[ci skip] Update version to %version%"
 
-  - name: source 
+  # Used only to trigger build when the source is changed
+  # See https://github.com/concourse/git-resource/issues/18 for details
+  - name: source-trigger
+    type: git
+    source:
+      uri: ((git-repo-url))
+      branch: ((git-release-branch))
+      private_key: ((git-private-key))
+
+  - name: source
     type: git
     source:
       uri: ((git-repo-url))
@@ -86,8 +95,9 @@ jobs:
     serial_groups: [version]
     plan:
     - aggregate:
-      - get: source
+      - get: source-trigger
         trigger: true
+      - get: source
       - get: version
         params: {pre: rev}
 
@@ -165,10 +175,14 @@ jobs:
     - task: bump-pom-version
       file: source/ci/tasks/bump-pom-version.yml
       params:
-        GIT_ORIGIN: ((git-repo-url))
         RELEASE_BRANCH: ((git-release-branch))
         FINAL_VERSION_SUFFIX: "" # Could be .RELEASE for example
         NEXT_VERSION_SUFFIX: "-SNAPSHOT"
+
+    - put: source
+      params:
+        repository: updated-source
+        rebase: true
 
   #  - put: gh-release
   #    params:
