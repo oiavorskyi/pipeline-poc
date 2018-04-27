@@ -1,4 +1,11 @@
 ---
+resource_types:
+  - name: cf-cli-resource
+    type: docker-image
+    source:
+      repository: nulldriver/cf-cli-resource
+      tag: latest
+
 resources:
   - name: version
     type: semver
@@ -45,10 +52,10 @@ resources:
   #     regexp: final/((application-name))-(.*).tgz
 
   - name: pcf-dev
-    type: cf
+    type: cf-cli-resource
     source:
       api: ((cf-dev-api))
-      organization: ((cf-dev-org))
+      org: ((cf-dev-org))
       space: ((cf-dev-space))
       username: ((cf-dev-username))
       password: ((cf-dev-password))
@@ -101,12 +108,23 @@ jobs:
           unpack: true
       - get: source # To enable usage of this resource in shipit "passed" condition
         passed: [create-rc]
-    - put: pcf-dev
-      params:
-        manifest: release/manifests/development.yml
-        path: release/application.jar
-        current_app_name: dev-((application-name))((application-deployment-suffix))
-        show_app_log: true
+    - do:
+      - put: pcf-dev
+        params:
+          command: push
+          app_name: dev-((application-name))((application-deployment-suffix))
+          path: release/application.jar
+          manifest: release/manifests/development.yml
+          no_start: true
+      - put: pcf-dev
+        params:
+          command: bind-service
+          app_name: dev-((application-name))((application-deployment-suffix))
+          service_instance: pipeline-poc-db 
+      - put: pcf-dev
+        params:
+          command: start
+          app_name: dev-((application-name))((application-deployment-suffix))
 
 #  - name: shipit
 #    serial_groups: [version]
