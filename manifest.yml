@@ -2,4 +2,4 @@
 applications:
   - name: pipeline-poc
     path: target/pipelinepoc-1.0.0-SNAPSHOT.jar
-    memory: 512M
+    memory: 768M
