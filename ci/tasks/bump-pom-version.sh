@@ -35,7 +35,7 @@ cd updated-source
     git merge version-bump
     git branch -d version-bump
 
-    git remote -v
+    git remote set-url origin ${GIT_ORIGIN}
 
     git push origin ${RELEASE_BRANCH}
 cd -

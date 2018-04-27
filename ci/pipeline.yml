@@ -165,17 +165,18 @@ jobs:
     - task: bump-pom-version
       file: source/ci/tasks/bump-pom-version.yml
       params:
+        GIT_ORIGIN: ((git-repo-url))
         RELEASE_BRANCH: ((git-release-branch))
         FINAL_VERSION_SUFFIX: "" # Could be .RELEASE for example
         NEXT_VERSION_SUFFIX: "-SNAPSHOT"
 
-#    - put: gh-release
-#      params:
-#        name: final-version/version
-#        tag: final-version/version
-#        tag_prefix: v
-#        globs:
-#        - final-release/*.tgz
+  #  - put: gh-release
+  #    params:
+  #      name: final-version/version
+  #      tag: final-version/version
+  #      tag_prefix: v
+      #  globs:
+      #  - final-release/*.tgz
 
     - put: version
       params:
