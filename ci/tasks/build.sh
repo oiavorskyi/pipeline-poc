@@ -30,5 +30,7 @@ pushd source
 	cp target/*.jar ../unpacked-artifacts/application.jar
 	mkdir -p ../unpacked-artifacts/manifests
 	cp manifest.yml ../unpacked-artifacts/manifests/development.yml
-	#cp manifest-oauth.yml ../unpacked-artifacts/manifests/prod.yml
+	cp manifest.yml ../unpacked-artifacts/manifests/staging.yml
+	cp manifest.yml ../unpacked-artifacts/manifests/perf.yml
+	cp manifest.yml ../unpacked-artifacts/manifests/prod.yml
 popd

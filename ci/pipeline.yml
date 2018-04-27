@@ -42,14 +42,14 @@ resources:
       secret_access_key: ((s3-secret-access-key))
       regexp: rc/((application-name))-(.*).tgz
 
-  # - name: release-final
-  #   type: s3
-  #   source:
-  #     endpoint: ((s3-endpoint))
-  #     bucket: ((s3-release-bucket))
-  #     access_key_id: ((s3-access-key-id))
-  #     secret_access_key: ((s3-secret-access-key))
-  #     regexp: final/((application-name))-(.*).tgz
+  - name: release-final
+    type: s3
+    source:
+      endpoint: ((s3-endpoint))
+      bucket: ((s3-release-bucket))
+      access_key_id: ((s3-access-key-id))
+      secret_access_key: ((s3-secret-access-key))
+      regexp: final/((application-name))-(.*).tgz
 
   - name: pcf-dev
     type: cf-cli-resource
@@ -61,15 +61,25 @@ resources:
       password: ((cf-dev-password))
       skip_cert_check: false
 
-  # - name: pcf-prod
-  #   type: cf
-  #   source:
-  #     api: ((cf-prod-api))
-  #     organization: ((cf-prod-org))
-  #     space: ((cf-prod-space))
-  #     username: ((cf-prod-username))
-  #     password: ((cf-prod-password))
-  #     skip_cert_check: false
+  - name: pcf-staging
+    type: cf-cli-resource
+    source:
+      api: ((cf-staging-api))
+      org: ((cf-staging-org))
+      space: ((cf-staging-space))
+      username: ((cf-staging-username))
+      password: ((cf-staging-password))
+      skip_cert_check: false
+
+  - name: pcf-perf
+    type: cf-cli-resource
+    source:
+      api: ((cf-perf-api))
+      org: ((cf-perf-org))
+      space: ((cf-perf-space))
+      username: ((cf-perf-username))
+      password: ((cf-perf-password))
+      skip_cert_check: false
 
 jobs:
   - name: create-rc
@@ -126,38 +136,38 @@ jobs:
           command: start
           app_name: dev-((application-name))((application-deployment-suffix))
 
-#  - name: shipit
-#    serial_groups: [version]
-#    plan:
-#    - aggregate:
-#      - get: release-candidate
-#        passed: [deploy-dev]
-#      - get: final-version
-#        resource: version 
-#        params: {bump: final}
-#      - get: next-version
-#        resource: version 
-#        params: {bump: minor}
-#      - get: source
-#        passed: [deploy-dev]
+  - name: shipit
+    serial_groups: [version]
+    plan:
+    - aggregate:
+      - get: release-candidate
+        passed: [deploy-dev]
+      - get: final-version
+        resource: version 
+        params: {bump: final}
+      - get: next-version
+        resource: version 
+        params: {bump: minor}
+      - get: source
+        passed: [deploy-dev]
 
-#    - task: promote-release
-#      file: source/ci/tasks/promote-release.yml
-#      input_mapping:
-#        version: final-version
-#      params:
-#        ARTIFACT_NAME: ((application-name))
+    - task: promote-release
+      file: source/ci/tasks/promote-release.yml
+      input_mapping:
+        version: final-version
+      params:
+        ARTIFACT_NAME: ((application-name))
 
-#    - put: release-final
-#      params:
-#        file: final-release/*.tgz
+    - put: release-final
+      params:
+        file: final-release/*.tgz
 
-#    - task: bump-pom-version
-#      file: source/ci/tasks/bump-pom-version.yml
-#      params:
-#        RELEASE_BRANCH: ((git-release-branch))
-#        FINAL_VERSION_SUFFIX: "" # Could be .RELEASE for example
-#        NEXT_VERSION_SUFFIX: "-SNAPSHOT"
+    - task: bump-pom-version
+      file: source/ci/tasks/bump-pom-version.yml
+      params:
+        RELEASE_BRANCH: ((git-release-branch))
+        FINAL_VERSION_SUFFIX: "" # Could be .RELEASE for example
+        NEXT_VERSION_SUFFIX: "-SNAPSHOT"
 
 #    - put: gh-release
 #      params:
@@ -167,9 +177,63 @@ jobs:
 #        globs:
 #        - final-release/*.tgz
 
-#    - put: version
-#      params:
-#        bump: minor
+    - put: version
+      params:
+        bump: minor
+
+  - name: deploy-staging
+    plan:
+    - aggregate:
+      - get: release
+        resource: release-final
+        passed: [shipit]
+        trigger: true
+        params:
+          unpack: true
+    - do:
+      - put: pcf-staging
+        params:
+          command: push
+          app_name: staging-((application-name))((application-deployment-suffix))
+          path: release/application.jar
+          manifest: release/manifests/staging.yml
+          no_start: true
+      - put: pcf-staging
+        params:
+          command: bind-service
+          app_name: staging-((application-name))((application-deployment-suffix))
+          service_instance: pipeline-poc-db 
+      - put: pcf-staging
+        params:
+          command: start
+          app_name: staging-((application-name))((application-deployment-suffix))
+
+  - name: deploy-perf
+    plan:
+    - aggregate:
+      - get: release
+        resource: release-final
+        passed: [shipit]
+        trigger: true
+        params:
+          unpack: true
+    - do:
+      - put: pcf-perf
+        params:
+          command: push
+          app_name: perf-((application-name))((application-deployment-suffix))
+          path: release/application.jar
+          manifest: release/manifests/perf.yml
+          no_start: true
+      - put: pcf-perf
+        params:
+          command: bind-service
+          app_name: perf-((application-name))((application-deployment-suffix))
+          service_instance: pipeline-poc-db 
+      - put: pcf-perf
+        params:
+          command: start
+          app_name: perf-((application-name))((application-deployment-suffix))
 
 #  - name: deploy-prod
 #    plan:
