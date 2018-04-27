@@ -18,7 +18,7 @@ fi
 
 git clone source updated-source
 
-pushd updated-source
+cd updated-source
     git config user.email "wings@pivotal.io"
     git config user.name "Concourse CI"
 
@@ -36,4 +36,4 @@ pushd updated-source
     git branch -d version-bump
 
     git push origin ${RELEASE_BRANCH}
-popd
+cd -
