@@ -18,6 +18,7 @@ fi
 
 git clone source updated-source
 
+mkdir -p ~/.ssh
 ssh-keyscan github.com >> ~/.ssh/known_hosts
 
 cd updated-source
