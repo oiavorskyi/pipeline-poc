@@ -176,6 +176,7 @@ jobs:
       file: source/ci/tasks/bump-pom-version.yml
       params:
         RELEASE_BRANCH: ((git-release-branch))
+        GITHUB_PROJECT_PAGE: ((github-project-page))
         FINAL_VERSION_SUFFIX: "" # Could be .RELEASE for example
         NEXT_VERSION_SUFFIX: "-SNAPSHOT"
 

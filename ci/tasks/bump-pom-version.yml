@@ -19,6 +19,7 @@ outputs:
 
 params:
   RELEASE_BRANCH: ""
+  GITHUB_PROJECT_PAGE: ""
   FINAL_VERSION_SUFFIX: ""
   NEXT_VERSION_SUFFIX: ""
 

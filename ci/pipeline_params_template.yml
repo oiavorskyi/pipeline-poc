@@ -6,6 +6,7 @@ git-release-branch: master
 github-username: pivotalservices
 github-repository: snap
 github-access-token: 
+github-project-page:
 s3-endpoint: s3.amazonaws.com
 s3-release-bucket: artifacts.snap.pivotal.io
 s3-access-key-id: 

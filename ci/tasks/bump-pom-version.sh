@@ -23,7 +23,7 @@ cd updated-source
     last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
 
     echo "## Changes since release ${last_tag}:" > release.md
-    git log ${last_tag}..HEAD --reverse --pretty=format:'- [%s](http://github.com/oiavorskyi/pipeline-poc/commit/%H)' | grep -v 'ci skip' >> release.md
+    git log ${last_tag}..HEAD --reverse --pretty=format:'- [%s](${GITHUB_PROJECT_PAGE}/commit/%H)' | grep -v 'ci skip' >> release.md
 
     git config user.email "wings@pivotal.io"
     git config user.name "Concourse CI"
