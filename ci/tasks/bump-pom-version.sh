@@ -34,4 +34,10 @@ cd updated-source
     git checkout ${RELEASE_BRANCH}
     git merge version-bump
     git branch -d version-bump
+
+    # Produce release notes
+    last_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+
+    echo "## Changes since release ${last_tag}:" > release.md
+    git log ${last_tag}..HEAD --reverse --pretty=format:'- [%s](http://github.com/oiavorskyi/pipeline-poc/commit/%H)' | grep -v 'ci skip' >> release.md
 cd -
