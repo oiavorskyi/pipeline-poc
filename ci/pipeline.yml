@@ -6,6 +6,11 @@ resource_types:
       repository: nulldriver/cf-cli-resource
       tag: latest
 
+  - name: pull-request
+    type: docker-image
+    source:
+      repository: jrarchie/pr
+
 resources:
   - name: version
     type: semver
@@ -33,6 +38,13 @@ resources:
     source:
       uri: ((git-repo-url))
       branch: ((git-release-branch))
+      private_key: ((git-private-key))
+
+  - name: pr
+    type: pull-request
+    source:
+      repo: ((github-username))/((github-repository))
+      access_token: ((github-access-token))
       private_key: ((git-private-key))
 
   - name: gh-release
@@ -91,6 +103,31 @@ resources:
       skip_cert_check: false
 
 jobs:
+  - name: verify-pr
+    plan:
+    - aggregate:
+      - get: source
+        resource: pr
+        trigger: true
+      - get: version
+        params: {pre: pr}
+    - do:
+      - put: pr
+        params:
+          path: source
+          status: pending
+      - task: build
+        file: source/ci/tasks/build.yml
+      - on_failure:
+        put: pr
+        params:
+          path: source
+          status: failure
+    - put: pr
+      params:
+        path: source
+        status: success
+      
   - name: create-rc
     serial_groups: [version]
     plan:
