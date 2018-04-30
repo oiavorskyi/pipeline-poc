@@ -35,12 +35,12 @@ resources:
       branch: ((git-release-branch))
       private_key: ((git-private-key))
 
-  # - name: gh-release
-  #   type: github-release
-  #   source:
-  #     user: ((github-username))
-  #     repository: ((github-repository))
-  #     access_token: ((github-access-token))
+  - name: gh-release
+    type: github-release
+    source:
+      user: ((github-username))
+      repository: ((github-repository))
+      access_token: ((github-access-token))
 
   - name: release-candidate 
     type: s3
@@ -184,13 +184,12 @@ jobs:
         repository: updated-source
         rebase: true
 
-  #  - put: gh-release
-  #    params:
-  #      name: final-version/version
-  #      tag: final-version/version
-  #      tag_prefix: v
-      #  globs:
-      #  - final-release/*.tgz
+    - put: gh-release
+      params:
+        name: final-version/version
+        tag: final-version/version
+        tag_prefix: v
+        body: updated-source/release.md
 
     - put: version
       params:
